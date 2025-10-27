@@ -1,1 +1,31 @@
 
+docker-compose up -d
+
+docker exec -it psql-client psql -h postgres -U admin -d mydb
+
+
+\conninfo
+SELECT version();
+\dt
+
+
+Access pgAdmin:
+
+Open in your browser:
+http://localhost:8080
+
+Login credentials:
+
+Email: admin@demo.com
+
+Password: admin123
+
+Add New Server in pgAdmin:
+
+Host name/address: postgres
+
+Port: 5432
+
+Username: admin
+
+Password: admin123
