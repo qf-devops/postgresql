@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:latest
+    container_name: postgres-container
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+      POSTGRES_DB: mydb
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - pg-network
+
+  # pgAdmin Web Interface
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin-container
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@demo.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+    ports:
+      - "8080:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      - postgres
+    networks:
+      - pg-network
+
+  # psql Client Container
+  psql-client:
+    image: postgres:latest
+    container_name: psql-client
+    depends_on:
+      - postgres
+    entrypoint: [ "tail", "-f", "/dev/null" ]  # keep it running for interactive use
+    networks:
+      - pg-network
+
+networks:
+  pg-network:
+    driver: bridge
+
+volumes:
+  pgdata:
+  pgadmin_data:
